@@ -32,21 +32,22 @@ class Player {
     this.playerElm.style.left = this.positionX + "vw";
   }
 
-  getPosX(){
-    
-  } 
-  
-  getPosY(){
-    
+  getPosX() {
+    return this.positionX;
+  }
+
+  getPosY() {
+    return this.positionY;
   }
 }
 
 class Enemy {
-  constructor() {
-    this.positionX = 70;
-    this.positionY = 50;
+  constructor(player) {
+    this.player = player;
     this.width = 3;
     this.height = 5;
+    this.positionX = 70;
+    this.positionY = 50;
 
     this.createDomElement();
   }
@@ -64,13 +65,47 @@ class Enemy {
     parentElm.appendChild(this.enemyElm);
   }
 
-  // move towards player
-  followPlayer() {}
+  trackPlayer() {
+    const playerPosX = this.player.getPosX();
+    const playerPosY = this.player.getPosY();
+
+    // Adjust enemy position to get closer to the player
+    if (this.positionX < playerPosX) {
+      this.positionX++;
+      this.enemyElm.style.left = this.positionX + "vw";
+    } else if (this.positionX > playerPosX) {
+      this.positionX--;
+      this.enemyElm.style.left = this.positionX + "vw";
+    }
+
+    if (this.positionY < playerPosY) {
+      this.positionY++;
+      this.enemyElm.style.bottom = this.positionY + "vh";
+    } else if (this.positionY > playerPosY) {
+      this.positionY--;
+      this.enemyElm.style.bottom = this.positionY + "vh";
+    }
+  }
 }
 
+// create char instances
 const player = new Player();
-const enemy = new Enemy();
+const enemy = new Enemy(player);
 
+// enemy movement loop
+setInterval(() => {
+  enemy.trackPlayer();
+}, 400);
+
+// spawn new enemies
+/* let counter = 0;
+setInterval(() => {
+  enemy.createDomElement();
+  counter++;
+  console.log("creating a new enemy " + counter);
+}, 3000); */
+
+// key triggers
 document.addEventListener("keydown", (e) => {
   switch (e.code) {
     case "ArrowLeft":
