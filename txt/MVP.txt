@@ -12,25 +12,27 @@ player can shoot projectiles
 enemies move in player direction
 gameover on collision
 
-Milestone 1:
+[X] Milestone 1:
 create a player (size, position) + movement (up down left right)
 
--- width and height of vp have diff values -> check how to make player keep scale
-
-Milestone 2:
+[ ] Milestone 2:
 create enemy (size, position) + movement (toward player coords)
 
-Milestone 3:
+[ ] Milestone 3:
 detect collision
 
-Milestone 4:
+[ ] Milestone 4:
 figure out shooting somehow xD
 
-Milestone 5:
+[ ] Milestone 5:
 remove enemy on hit
 
-Milestone 6:
+[ ] Milestone 6:
 spawn in more enemy instances
 
-Milestone 7:
+[ ] Milestone 7:
 gameover screen
+
+-- for different boss stages, assign boss different classes for different visuals
+-- make red X mark in photoshop in png
+-- width and height of vp have diff values -> check how to make player keep scale

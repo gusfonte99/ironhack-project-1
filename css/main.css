@@ -1,5 +1,5 @@
 body {
-    background-color: white;
+    background-color: burlywood;
 }
 
 #board {
@@ -12,4 +12,14 @@ body {
     position: absolute;
     background-color: green;
     /* border-radius: 10vw; */
+}
+
+.enemy {
+    position: absolute;
+    background-color: red;
+}
+
+.health {
+    position: absolute;
+    width: 20vw;
 }

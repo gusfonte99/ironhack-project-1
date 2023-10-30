@@ -2,8 +2,8 @@ Bullet hell:
 
 --name: 
 "Dev Hell"
- "Bullet Dev"
- "Dev .."???
+"Bullet Dev"
+"Web Dev Survivors"
 
 --style:
 floor: generic floor image
@@ -69,3 +69,12 @@ quick dialogue explaining the concept (skip with spacebar)
 --game end:
 splash screen - troll image???
 message - css wins again (ex.)
+
+--------------------------------------------
+
+--- NEW IDEAS ---
+
+
+--enemy spawning:
+display a red X on spawn point
+delay spawn by 1.3sec
