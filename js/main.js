@@ -2,8 +2,8 @@ class Player {
   constructor() {
     this.width = 3;
     this.height = 5; // check notes
-    this.positionX = 15; /*  - (this.width / 2); */
-    this.positionY = 50; /*  - (this.height / 2); */
+    this.positionX = 15;
+    this.positionY = 50;
 
     this.playerElm = document.getElementById("player");
     this.playerElm.style.width = this.width + "vw";
@@ -50,13 +50,12 @@ class Player {
 }
 
 class Enemy {
-  constructor(player) {
-    this.player = player;
+  constructor() {
     this.width = 3;
     this.height = 5;
     this.positionX = Math.floor(Math.random() * (100 - this.width + 1));
     this.positionY = Math.floor(Math.random() * (100 - this.height + 1));
-
+    
     this.createDomElement();
   }
 
@@ -71,13 +70,9 @@ class Enemy {
 
     const parentElm = document.getElementById("board");
     parentElm.appendChild(this.enemyElm);
-    enemyArr.push(this.enemyElm)
-    console.log(enemyArr.length)
   }
 
-  trackPlayer() {
-    const playerPosX = this.player.getPosX();
-    const playerPosY = this.player.getPosY();
+  trackPlayer(playerPosX, playerPosY) {
 
     // Adjust enemy position to get closer to the player
     if (this.positionX < playerPosX) {
@@ -98,16 +93,24 @@ class Enemy {
   }
 }
 
+class Bullet {
+  constructor(){
+    this.positionX =
+    this.positionY =
+    this.width = 
+    this.height = 
+    this.speed = 1
+  }
+}
+
 // create char instances
 const enemyArr = [];
 const player = new Player();
-const enemy = new Enemy(player);
 
 // spawn new enemies
 setInterval(() => {
-  const newEnemy = new Enemy(player); // Create a new enemy instance
-  //enemy.createDomElement(); ///////////////////////
-  enemyArr.push(newEnemy); /////////////////////////////////////////
+  const newEnemy = new Enemy(); // Create a new enemy instance
+  enemyArr.push(newEnemy);
 }, 3000);
 
 // enemy movement loop
@@ -116,7 +119,7 @@ setInterval(() => {
   //loop through enemy arr
   enemyArr.forEach((enemyInstance) => {
     // move enemies
-    enemy.trackPlayer();
+    enemyInstance.trackPlayer(player.positionX, player.positionY);
 
     // detect collision
     if (
@@ -133,7 +136,17 @@ setInterval(() => {
   });
 }, 30);
 
-// key triggers
+// bullet movement loop
+/* setInterval(() => {
+  //move bullets
+
+  // detect collision
+
+
+ // remove bullets off viewport??
+}, 30); */
+
+// move key triggers
 document.addEventListener("keydown", (e) => {
   switch (e.code) {
     case "ArrowLeft":
@@ -153,3 +166,6 @@ document.addEventListener("keydown", (e) => {
       break;
   }
 });
+
+// click event
+/* document.addEventListener("click", () =>) */
