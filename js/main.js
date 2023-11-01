@@ -13,23 +13,31 @@ class Player {
   }
 
   moveUp() {
-    this.positionY++;
-    this.playerElm.style.bottom = this.positionY + "vh";
+    if (this.positionY < 100 - this.height) {
+      this.positionY++;
+      this.playerElm.style.bottom = this.positionY + "vh";
+    }
   }
 
   moveDown() {
-    this.positionY--;
-    this.playerElm.style.bottom = this.positionY + "vh";
+    if (this.positionY > 0) {
+      this.positionY--;
+      this.playerElm.style.bottom = this.positionY + "vh";
+    }
   }
 
   moveLeft() {
-    this.positionX--;
-    this.playerElm.style.left = this.positionX + "vw";
+    if (this.positionX > 0) {
+      this.positionX--;
+      this.playerElm.style.left = this.positionX + "vw";
+    }
   }
 
   moveRight() {
-    this.positionX++;
-    this.playerElm.style.left = this.positionX + "vw";
+    if (this.positionX < 100 - this.width) {
+      this.positionX++;
+      this.playerElm.style.left = this.positionX + "vw";
+    }
   }
 
   getPosX() {
@@ -46,8 +54,8 @@ class Enemy {
     this.player = player;
     this.width = 3;
     this.height = 5;
-    this.positionX = 70;
-    this.positionY = 50;
+    this.positionX = Math.floor(Math.random() * (100 - this.width + 1));
+    this.positionY = Math.floor(Math.random() * (100 - this.height + 1));
 
     this.createDomElement();
   }
@@ -63,6 +71,8 @@ class Enemy {
 
     const parentElm = document.getElementById("board");
     parentElm.appendChild(this.enemyElm);
+    enemyArr.push(this.enemyElm)
+    console.log(enemyArr.length)
   }
 
   trackPlayer() {
@@ -71,39 +81,57 @@ class Enemy {
 
     // Adjust enemy position to get closer to the player
     if (this.positionX < playerPosX) {
-      this.positionX++;
+      this.positionX += 0.25;
       this.enemyElm.style.left = this.positionX + "vw";
     } else if (this.positionX > playerPosX) {
-      this.positionX--;
+      this.positionX -= 0.25;
       this.enemyElm.style.left = this.positionX + "vw";
     }
 
     if (this.positionY < playerPosY) {
-      this.positionY++;
+      this.positionY += 0.25;
       this.enemyElm.style.bottom = this.positionY + "vh";
     } else if (this.positionY > playerPosY) {
-      this.positionY--;
+      this.positionY -= 0.25;
       this.enemyElm.style.bottom = this.positionY + "vh";
     }
   }
 }
 
 // create char instances
+const enemyArr = [];
 const player = new Player();
 const enemy = new Enemy(player);
 
+// spawn new enemies
+setInterval(() => {
+  const newEnemy = new Enemy(player); // Create a new enemy instance
+  //enemy.createDomElement(); ///////////////////////
+  enemyArr.push(newEnemy); /////////////////////////////////////////
+}, 3000);
+
 // enemy movement loop
 setInterval(() => {
-  enemy.trackPlayer();
-}, 400);
+  
+  //loop through enemy arr
+  enemyArr.forEach((enemyInstance) => {
+    // move enemies
+    enemy.trackPlayer();
 
-// spawn new enemies
-/* let counter = 0;
-setInterval(() => {
-  enemy.createDomElement();
-  counter++;
-  console.log("creating a new enemy " + counter);
-}, 3000); */
+    // detect collision
+    if (
+      player.positionX < enemyInstance.positionX + enemyInstance.width &&
+      player.positionX + player.width > enemyInstance.positionX &&
+      player.positionY < enemyInstance.positionY + enemyInstance.height &&
+      player.positionY + player.height > enemyInstance.positionY
+    ) {
+      
+      // Collision detected!
+      console.log("game over!");
+      //location.href = "./gameover.html";
+    }
+  });
+}, 30);
 
 // key triggers
 document.addEventListener("keydown", (e) => {
