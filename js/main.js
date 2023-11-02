@@ -1,9 +1,10 @@
 class Player {
   constructor() {
-    this.width = 3;
-    this.height = 5; // check notes
+    this.width = 4;
+    this.height = 8; // check notes
     this.positionX = 15;
     this.positionY = 50;
+    this.health = 3;
 
     this.playerElm = document.getElementById("player");
     this.playerElm.style.width = this.width + "vw";
@@ -57,6 +58,12 @@ class Enemy {
     this.positionY = Math.floor(Math.random() * (100 - this.height + 1));
     this.enemyElm = null;
 
+    this.images = [
+      { name: "html", img: "html.png" },
+      { name: "css", img: "css.png" },
+      { name: "js", img: "js.png" },
+    ];
+
     this.createDomElement();
   }
 
@@ -98,19 +105,13 @@ class Bullet {
     this.positionX = player.getPosX() + player.width / 2;
     this.positionY = player.getPosY() + player.height / 2;
     this.speed = 1.25;
-    
-    this.mouseX = mouseX
-    this.mouseY = mouseY
 
-    this.width = 0.5;
+    this.mouseX = mouseX;
+    this.mouseY = mouseY;
+
+    this.width = 0.7;
     this.height = 1;
     this.bulletElm = null;
-    
-    this.images = [
-      { name: "html", img: "html.png" },
-      { name: "css", img: "css.png" },
-      { name: "js", img: "js.png" },
-    ];
 
     this.createDomElement();
   }
@@ -154,9 +155,9 @@ class Bullet {
     }
   }
 
-  removeBullet(i){
-    bulletsArr.splice(i, 1)
-    this.bulletElm.remove()
+  removeBullet(i) {
+    bulletsArr.splice(i, 1);
+    this.bulletElm.remove();
   }
 }
 
@@ -165,11 +166,15 @@ const enemyArr = [];
 const bulletsArr = [];
 const player = new Player();
 
+//score
+let points = 0;
+const score = document.getElementById("score");
+
 // spawn new enemies
 setInterval(() => {
   const newEnemy = new Enemy(); // Create a new enemy instance
   enemyArr.push(newEnemy);
-}, 3000);
+}, 1000);
 
 // enemy movement loop
 setInterval(() => {
@@ -185,9 +190,10 @@ setInterval(() => {
       player.positionY < enemyInstance.positionY + enemyInstance.height &&
       player.positionY + player.height > enemyInstance.positionY
     ) {
-      // Collision detected!
-      //console.log("game over!");
-      //location.href = "./gameover.html";
+      player.health--;
+    }
+    if (player.health === 0) {
+      location.href = "./gameover.html";
     }
   });
 }, 30);
@@ -195,27 +201,30 @@ setInterval(() => {
 // bullet collision detection loop
 setInterval(() => {
   bulletsArr.forEach((bulletInstance, i) => {
-
-    bulletInstance.moveBullet(i)
+    bulletInstance.moveBullet(i);
 
     // detect collision (loop through enemy arr)
     enemyArr.forEach((enemyInstance) => {
       if (
-        bulletInstance.positionX < enemyInstance.positionX + enemyInstance.width &&
-        bulletInstance.positionX + bulletInstance.width > enemyInstance.positionX &&
-        bulletInstance.positionY < enemyInstance.positionY + enemyInstance.height &&
-        bulletInstance.positionY + bulletInstance.height > enemyInstance.positionY
+        bulletInstance.positionX <
+          enemyInstance.positionX + enemyInstance.width &&
+        bulletInstance.positionX + bulletInstance.width >
+          enemyInstance.positionX &&
+        bulletInstance.positionY <
+          enemyInstance.positionY + enemyInstance.height &&
+        bulletInstance.positionY + bulletInstance.height >
+          enemyInstance.positionY
       ) {
-        // Collision detected!
-        console.log("enemy hit!");
         // remove enemy and bullet on hit
-        enemyArr.splice(enemyArr.indexOf(enemyInstance), 1)
-        enemyInstance.enemyElm.remove()
-        
-        bulletsArr.splice(bulletsArr.indexOf(bulletInstance), 1)
-        bulletInstance.bulletElm.remove()
+        enemyArr.splice(enemyArr.indexOf(enemyInstance), 1);
+        enemyInstance.enemyElm.remove();
 
-        //add score
+        bulletsArr.splice(bulletsArr.indexOf(bulletInstance), 1);
+        bulletInstance.bulletElm.remove();
+
+        //update score
+        points += 10;
+        score.innerText = `Score: ${points}`;
       }
     });
   });
@@ -224,7 +233,7 @@ setInterval(() => {
 // move key triggers
 document.addEventListener("keydown", (e) => {
   switch (e.code) {
-        /* case "ArrowUp" && "ArrowLeft":
+    /* case "ArrowUp" && "ArrowLeft":
       player.moveUp();
       player.moveLeft();
       break;
