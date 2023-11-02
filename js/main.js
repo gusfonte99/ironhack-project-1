@@ -106,6 +106,12 @@ class Bullet {
     this.height = 1;
     this.bulletElm = null;
     
+    this.images = [
+      { name: "html", img: "html.png" },
+      { name: "css", img: "css.png" },
+      { name: "js", img: "js.png" },
+    ];
+
     this.createDomElement();
   }
 
@@ -122,21 +128,35 @@ class Bullet {
     parentElm.appendChild(this.bulletElm);
   }
 
-  moveBullet() {
+  moveBullet(i) {
     const dx = this.mouseX - this.positionX;
     const dy = this.mouseY - this.positionY;
 
     const magnitude = Math.sqrt(dx * dx + dy * dy);
-    const normDX = dx / magnitude
-    const normDY = dy / magnitude
+    const normDX = dx / magnitude;
+    const normDY = dy / magnitude;
 
-    this.mouseX += normDX * this.speed
-    this.mouseY += normDY * this.speed
-    this.positionX += normDX * this.speed
-    this.positionY += normDY * this.speed
+    this.mouseX += normDX * this.speed;
+    this.mouseY += normDY * this.speed;
+    this.positionX += normDX * this.speed;
+    this.positionY += normDY * this.speed;
 
-    this.bulletElm.style.left = this.positionX + 'vw'
-    this.bulletElm.style.bottom = this.positionY + 'vh'
+    this.bulletElm.style.left = this.positionX + "vw";
+    this.bulletElm.style.bottom = this.positionY + "vh";
+
+    if (
+      this.positionX > 100 ||
+      this.positionX < 0 ||
+      this.positionY > 100 ||
+      this.positionY < 0
+    ) {
+      this.removeBullet(i);
+    }
+  }
+
+  removeBullet(i){
+    bulletsArr.splice(i, 1)
+    this.bulletElm.remove()
   }
 }
 
@@ -174,21 +194,28 @@ setInterval(() => {
 
 // bullet collision detection loop
 setInterval(() => {
-  bulletsArr.forEach((bulletInstance) => {
-    // detect collision (lopp through enemy arr)
+  bulletsArr.forEach((bulletInstance, i) => {
+
+    bulletInstance.moveBullet(i)
+
+    // detect collision (loop through enemy arr)
     enemyArr.forEach((enemyInstance) => {
       if (
-        bulletInstance.positionX <
-          enemyInstance.positionX + enemyInstance.width &&
-        bulletInstance.positionX + bulletInstance.width >
-          enemyInstance.positionX &&
-        bulletInstance.positionY <
-          enemyInstance.positionY + enemyInstance.height &&
-        bulletInstance.positionY + bulletInstance.height >
-          enemyInstance.positionY
+        bulletInstance.positionX < enemyInstance.positionX + enemyInstance.width &&
+        bulletInstance.positionX + bulletInstance.width > enemyInstance.positionX &&
+        bulletInstance.positionY < enemyInstance.positionY + enemyInstance.height &&
+        bulletInstance.positionY + bulletInstance.height > enemyInstance.positionY
       ) {
         // Collision detected!
         console.log("enemy hit!");
+        // remove enemy and bullet on hit
+        enemyArr.splice(enemyArr.indexOf(enemyInstance), 1)
+        enemyInstance.enemyElm.remove()
+        
+        bulletsArr.splice(bulletsArr.indexOf(bulletInstance), 1)
+        bulletInstance.bulletElm.remove()
+
+        //add score
       }
     });
   });
@@ -197,7 +224,7 @@ setInterval(() => {
 // move key triggers
 document.addEventListener("keydown", (e) => {
   switch (e.code) {
-    /*     case "ArrowUp" && "ArrowLeft":
+        /* case "ArrowUp" && "ArrowLeft":
       player.moveUp();
       player.moveLeft();
       break;
@@ -243,5 +270,5 @@ document.addEventListener("click", (e) => {
   const bullet = new Bullet(mouseX, mouseY);
   bulletsArr.push(bullet);
   //bullet.moveBullet();
-  console.log(bulletsArr)
+  //console.log(bulletsArr)
 });
