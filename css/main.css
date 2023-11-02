@@ -1,30 +1,39 @@
 body {
-    background-color: burlywood;
+  background-image: linear-gradient(
+    0deg,
+    rgb(17, 51, 161) 15%,
+    rgb(136, 34, 195) 100%
+  );
 }
 
 #board {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
 }
 
 #player {
-    position: absolute;
-    background-color: green;
-    /* border-radius: 10vw; */
+  position: absolute;
+  background-color: green;
+  /* border-radius: 10vw; */
 }
 
 .enemy {
-    position: absolute;
-    background-color: red;
+  position: absolute;
+  background-color: red;
 }
 
 .health {
-    position: absolute;
-    width: 20vw;
+  position: absolute;
+  width: 20vw;
 }
 
 #page-gameover {
-    text-align: center;
+  text-align: center;
+}
+
+.bullet {
+  position: absolute;
+  background-color: aqua;
 }

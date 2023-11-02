@@ -55,7 +55,8 @@ class Enemy {
     this.height = 5;
     this.positionX = Math.floor(Math.random() * (100 - this.width + 1));
     this.positionY = Math.floor(Math.random() * (100 - this.height + 1));
-    
+    this.enemyElm = null;
+
     this.createDomElement();
   }
 
@@ -73,7 +74,6 @@ class Enemy {
   }
 
   trackPlayer(playerPosX, playerPosY) {
-
     // Adjust enemy position to get closer to the player
     if (this.positionX < playerPosX) {
       this.positionX += 0.25;
@@ -94,17 +94,55 @@ class Enemy {
 }
 
 class Bullet {
-  constructor(){
-    this.positionX =
-    this.positionY =
-    this.width = 
-    this.height = 
-    this.speed = 1
+  constructor(mouseX, mouseY) {
+    this.positionX = player.getPosX() + player.width / 2;
+    this.positionY = player.getPosY() + player.height / 2;
+    this.speed = 1.25;
+    
+    this.mouseX = mouseX
+    this.mouseY = mouseY
+
+    this.width = 0.5;
+    this.height = 1;
+    this.bulletElm = null;
+    
+    this.createDomElement();
+  }
+
+  createDomElement() {
+    this.bulletElm = document.createElement("div");
+    this.bulletElm.classList.add("bullet");
+
+    this.bulletElm.style.width = this.width + "vw";
+    this.bulletElm.style.height = this.height + "vh";
+    this.bulletElm.style.left = this.positionX + "vw";
+    this.bulletElm.style.bottom = this.positionY + "vh";
+
+    const parentElm = document.getElementById("board");
+    parentElm.appendChild(this.bulletElm);
+  }
+
+  moveBullet() {
+    const dx = this.mouseX - this.positionX;
+    const dy = this.mouseY - this.positionY;
+
+    const magnitude = Math.sqrt(dx * dx + dy * dy);
+    const normDX = dx / magnitude
+    const normDY = dy / magnitude
+
+    this.mouseX += normDX * this.speed
+    this.mouseY += normDY * this.speed
+    this.positionX += normDX * this.speed
+    this.positionY += normDY * this.speed
+
+    this.bulletElm.style.left = this.positionX + 'vw'
+    this.bulletElm.style.bottom = this.positionY + 'vh'
   }
 }
 
 // create char instances
 const enemyArr = [];
+const bulletsArr = [];
 const player = new Player();
 
 // spawn new enemies
@@ -115,7 +153,6 @@ setInterval(() => {
 
 // enemy movement loop
 setInterval(() => {
-  
   //loop through enemy arr
   enemyArr.forEach((enemyInstance) => {
     // move enemies
@@ -128,27 +165,55 @@ setInterval(() => {
       player.positionY < enemyInstance.positionY + enemyInstance.height &&
       player.positionY + player.height > enemyInstance.positionY
     ) {
-      
       // Collision detected!
-      console.log("game over!");
+      //console.log("game over!");
       //location.href = "./gameover.html";
     }
   });
 }, 30);
 
-// bullet movement loop
-/* setInterval(() => {
-  //move bullets
-
-  // detect collision
-
-
- // remove bullets off viewport??
-}, 30); */
+// bullet collision detection loop
+setInterval(() => {
+  bulletsArr.forEach((bulletInstance) => {
+    // detect collision (lopp through enemy arr)
+    enemyArr.forEach((enemyInstance) => {
+      if (
+        bulletInstance.positionX <
+          enemyInstance.positionX + enemyInstance.width &&
+        bulletInstance.positionX + bulletInstance.width >
+          enemyInstance.positionX &&
+        bulletInstance.positionY <
+          enemyInstance.positionY + enemyInstance.height &&
+        bulletInstance.positionY + bulletInstance.height >
+          enemyInstance.positionY
+      ) {
+        // Collision detected!
+        console.log("enemy hit!");
+      }
+    });
+  });
+}, 30);
 
 // move key triggers
 document.addEventListener("keydown", (e) => {
   switch (e.code) {
+    /*     case "ArrowUp" && "ArrowLeft":
+      player.moveUp();
+      player.moveLeft();
+      break;
+    case "ArrowUp" && "ArrowRight":
+      player.moveUp();
+      player.moveRight();
+      break;
+    case "ArrowDown" && "ArrowLeft":
+      player.moveDown();
+      player.moveLeft();
+      break;
+    case "ArrowDown" && "ArrowRight":
+      player.moveDown();
+      player.moveRight();
+      break; */
+
     case "ArrowLeft":
       player.moveLeft();
       break;
@@ -168,4 +233,15 @@ document.addEventListener("keydown", (e) => {
 });
 
 // click event
-/* document.addEventListener("click", () =>) */
+document.addEventListener("click", (e) => {
+  const vw = [document.documentElement.clientWidth];
+  const vh = [document.documentElement.clientHeight];
+
+  const mouseX = (e.clientX / vw) * 100;
+  const mouseY = 100 - (e.clientY / vh) * 100;
+
+  const bullet = new Bullet(mouseX, mouseY);
+  bulletsArr.push(bullet);
+  //bullet.moveBullet();
+  console.log(bulletsArr)
+});
