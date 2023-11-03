@@ -39,3 +39,5 @@ Shoot with mouse Left Click
 
 Try it out! =>
 [Web Dev Survivors](https://gusfonte99.github.io/ironhack-project-1/)
+
+![Alpha version](./images/Screenshot_6.png)
