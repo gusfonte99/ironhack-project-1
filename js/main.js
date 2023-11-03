@@ -1,7 +1,7 @@
 class Player {
   constructor() {
     this.width = 4;
-    this.height = 8; // check notes
+    this.height = 8;
     this.positionX = 15;
     this.positionY = 50;
     this.health = 3;
@@ -172,14 +172,15 @@ const score = document.getElementById("score");
 
 // spawn new enemies
 setInterval(() => {
-  const newEnemy = new Enemy(); // Create a new enemy instance
+  const newEnemy = new Enemy();
   enemyArr.push(newEnemy);
-}, 1000);
+}, 900);
 
 // enemy movement loop
 setInterval(() => {
-  //loop through enemy arr
+
   enemyArr.forEach((enemyInstance) => {
+    
     // move enemies
     enemyInstance.trackPlayer(player.positionX, player.positionY);
 
@@ -201,19 +202,17 @@ setInterval(() => {
 // bullet collision detection loop
 setInterval(() => {
   bulletsArr.forEach((bulletInstance, i) => {
+    
+    // move bullet
     bulletInstance.moveBullet(i);
 
-    // detect collision (loop through enemy arr)
+    // detect collision with enemy
     enemyArr.forEach((enemyInstance) => {
       if (
-        bulletInstance.positionX <
-          enemyInstance.positionX + enemyInstance.width &&
-        bulletInstance.positionX + bulletInstance.width >
-          enemyInstance.positionX &&
-        bulletInstance.positionY <
-          enemyInstance.positionY + enemyInstance.height &&
-        bulletInstance.positionY + bulletInstance.height >
-          enemyInstance.positionY
+        bulletInstance.positionX < enemyInstance.positionX + enemyInstance.width &&
+        bulletInstance.positionX + bulletInstance.width > enemyInstance.positionX &&
+        bulletInstance.positionY < enemyInstance.positionY + enemyInstance.height &&
+        bulletInstance.positionY + bulletInstance.height > enemyInstance.positionY
       ) {
         // remove enemy and bullet on hit
         enemyArr.splice(enemyArr.indexOf(enemyInstance), 1);
@@ -233,22 +232,6 @@ setInterval(() => {
 // move key triggers
 document.addEventListener("keydown", (e) => {
   switch (e.code) {
-    /* case "ArrowUp" && "ArrowLeft":
-      player.moveUp();
-      player.moveLeft();
-      break;
-    case "ArrowUp" && "ArrowRight":
-      player.moveUp();
-      player.moveRight();
-      break;
-    case "ArrowDown" && "ArrowLeft":
-      player.moveDown();
-      player.moveLeft();
-      break;
-    case "ArrowDown" && "ArrowRight":
-      player.moveDown();
-      player.moveRight();
-      break; */
 
     case "ArrowLeft":
       player.moveLeft();
@@ -278,6 +261,4 @@ document.addEventListener("click", (e) => {
 
   const bullet = new Bullet(mouseX, mouseY);
   bulletsArr.push(bullet);
-  //bullet.moveBullet();
-  //console.log(bulletsArr)
 });

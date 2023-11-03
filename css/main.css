@@ -49,29 +49,28 @@ body {
   margin-right: 1vw;
   background-color: rgb(107, 86, 40);
   border-radius: 4px;
-
 }
 
 .bullet {
   position: absolute;
   border-radius: 10px;
-  border: solid  1px white;
+  border: solid 1px white;
   background-image: radial-gradient(aqua, blue);
 }
 
 #page-gameover {
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: space-evenly;
-padding: 0;
-margin: 0;
-height: 100vh;
-background-image: linear-gradient(
-  0deg,
-  rgb(17, 51, 161) 0%,
-  rgb(136, 34, 195) 100%
-);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 0;
+  margin: 0;
+  height: 100vh;
+  background-image: linear-gradient(
+    0deg,
+    rgb(17, 51, 161) 0%,
+    rgb(136, 34, 195) 100%
+  );
 }
 
 a p {
@@ -88,7 +87,10 @@ h1 {
 }
 
 p {
-color: white;
-font-size: 2em;
+  color: white;
+  font-size: 2em;
 }
 
+.prevent-select {
+  user-select: none;
+}
